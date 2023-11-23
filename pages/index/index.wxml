@@ -1,27 +1,18 @@
 <!--index.wxml-->
 <view class="content">
-  <text class="status">
-  状态：{{ status }}
-   {{ deviceId }}
-   </text> 
-
+  <text class="status">状态：{{ status }} <view wx:if="{{deviceId}}">--- {{ deviceId }}</view></text> 
    <text class="msg">消息：{{ msg }} </text>
-
   <button type="default" class="button" bindtap="startBluetoothDevicesDiscovery">搜索连接</button>
-   
+    
 
- 
-  <button type="primary" class="button" bindtap="bindViewPrepage">上一页</button>
-  <button type="primary" class="button" bindtap="bindViewNextpage">下一页</button>
-  <button type="primary" class="button" bindtap="bindViewEsc">ESC</button>
-  <button type="primary" class="button" bindtap="bindViewEnter">Enter</button>
-
-<view>
-<input model:value="{{strcmd}}"></input>
+  <view>
+    <view class="view-contain-ti">
+      <text class="text-ti">指令</text>
+      <input class="input1" model:value="{{strcmd}}"></input>
+    </view>
   <button type="primary" class="button" bindtap="bindViewScmd">发送字符串指令</button>
-</view>
+  </view>
 
-  
 </view>
 
 
