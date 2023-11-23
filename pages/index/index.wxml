@@ -11,6 +11,7 @@
       <input class="input1" model:value="{{strcmd}}"></input>
     </view>
   <button type="primary" class="button" bindtap="bindViewScmd">发送字符串指令</button>
+    <switch  type="switch" model:checked="{{cleanStrCmd}}"   >发送指令后清除输入框</switch>
   </view>
 
 </view>

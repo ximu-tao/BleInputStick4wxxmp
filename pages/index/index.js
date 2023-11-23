@@ -15,7 +15,7 @@ Page({
     writeCharacteristicsId:"",
 
     strcmd:'K:ABC123',
-
+    cleanStrCmd : false,
   },
   //事件处理函数
   bindViewTap: function() {
@@ -342,6 +342,9 @@ Page({
     that.sendStrCmd( that.data.strcmd )
     console.log( that.data.cleanStrCmd );
 
+    if( that.data.cleanStrCmd ){
+      that.setData( { 'strcmd': ''  } );
+    }
   },
 
   sendStrCmd:function(strcmd) {
