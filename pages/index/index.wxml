@@ -22,7 +22,7 @@
     <button type="primary" bind:tap="bindViewMouseLClick">左键</button>
     <button type="primary" bind:tap="bindViewMouseRClick">右键</button>
   </view>
-  <view class="touchpad">
-    模拟触摸板区域，等待后续开发
+  <view class="touchpad"  bind:touchstart="handletouchstart" bind:touchend="handletouchend"  bindtouchmove="handletouchmove"  >
+    
   </view>
 </view>

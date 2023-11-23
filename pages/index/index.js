@@ -4,6 +4,11 @@ const app = getApp()
 const util = require("../../utils/util");
 var that;//把this对象复制到临时变量that
 
+var lastLeft = 0;
+var lastTop = 0;
+var currTop = 0;
+var currLeft = 0;
+
 Page({
   data: {
     status: "未连接",
@@ -16,6 +21,7 @@ Page({
 
     strcmd:'K:ABC123',
     cleanStrCmd : false,
+    MouseReport : [],
   },
   //事件处理函数
   bindViewTap: function() {
@@ -58,6 +64,11 @@ Page({
     } else {
 
     }
+
+    this.MouseReport = new Uint8Array(6);
+    // console.log( that.stringToBytes( "M:" )); // 77 58
+    this.MouseReport[0] = 77;
+    this.MouseReport[1] = 58; 
   },
 
    
@@ -362,7 +373,7 @@ Page({
   {
     
  
-    console.log('发送的数据：' ,dataBuffer)
+    // console.log('发送的数据：' ,dataBuffer)
     wx.writeBLECharacteristicValue({
       deviceId: that.connectedDeviceId,
       serviceId: that.ServicweId,
@@ -377,7 +388,7 @@ Page({
         return 1;
       },
       fail: function (res) {
-        console.log(res,'BLE发送失败：')
+        // console.log(res,'BLE发送失败：')
         that.setData({
           status:'操作失败',
           msg: 'send:' + that.writeDatas+'失败'
@@ -385,7 +396,7 @@ Page({
         return 0;
       },
       complete: function (res) {
-        console.log('BLE发送结束')
+        // console.log('BLE发送结束')
       }
     })
   },
@@ -433,10 +444,21 @@ Page({
   },
 
   bindViewMouseRClick: function() {
-    that.blesend(that.stringToBytes( "M:RCLICK" ));
+    that.MouseReport[2] = 2; 
+    that.blesend( that.MouseReport.buffer );
+    setTimeout( ()=>{
+      that.MouseReport[2] = 0; 
+      that.blesend( that.MouseReport.buffer );
+    } ,  20 )
   },
   bindViewMouseLClick: function() {
-    that.blesend(that.stringToBytes( "M:LCLICK" ));
+
+    that.MouseReport[2] = 1; 
+    that.blesend( that.MouseReport.buffer );
+    setTimeout( ()=>{
+      that.MouseReport[2] = 0; 
+      that.blesend( that.MouseReport.buffer );
+    } ,  20 )
   },
 
   // 断开设备连接
@@ -464,5 +486,56 @@ Page({
     })
   },
 
+  handletouchstart: function (event) {
+    // console.log( event )
+    // console.log( this.MouseReport );
+    // console.log( that.MouseReport );
 
+    lastTop = event.touches[0].clientY 
+    currTop = lastTop
+    lastLeft = event.touches[0].clientX
+    currLeft = lastLeft
+    // 防止开始时鼠标乱跳
+
+    let intervalId = setInterval( ()=>{
+      
+      // that.MouseReport[2] = 0;
+      this.MouseReport[3] = (currLeft - lastLeft) ;
+      this.MouseReport[4] = (currTop - lastTop)  ;
+      // that.MouseReport[5] = 0;
+
+      // console.log( "interval1" , lastLeft ,  lastTop  );
+      // console.log( "interval2" , currLeft - lastLeft , currTop - lastTop  );
+
+
+      lastLeft = currLeft  
+      lastTop  = currTop
+
+      that.blesend(  this.MouseReport.buffer  );
+
+
+    }  , 40 );
+
+    this.setData({
+      intervalId: intervalId,
+    });
+
+  },
+  handletouchend: function (event) {
+    clearInterval( that.data.intervalId )
+
+    console.log( event );
+    this.MouseReport[3] = 0  
+    this.MouseReport[4] = 0
+
+    this.blesend(  this.MouseReport.buffer  );
+
+    console.log( "touchend1" , lastLeft ,  lastTop  );
+    console.log( "touchend2" , currLeft  , currTop   );
+
+  },
+  handletouchmove: function (event) {
+    currTop = event.touches[0].clientY 
+    currLeft = event.touches[0].clientX
+  }
 })

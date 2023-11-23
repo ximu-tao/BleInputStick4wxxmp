@@ -54,13 +54,20 @@ page{
 }
 
 .mousebutton{
-     display: flex;
+  display: flex;
   flex-direction: row;
    justify-content: center;
+   background-color: #ffffff;
 }
 
 .touchpad{
-  background-color: red;
+  background-color: #ffffff;
   height: 60vw;
+  display: flex;
 
+
+  border: 5rpx solid #faca82;
+  border-radius: 50rpx; 
+  margin: 10px;
+  
 }
