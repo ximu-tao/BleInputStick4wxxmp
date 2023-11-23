@@ -339,8 +339,20 @@ Page({
   
   bindViewScmd:function()
   {
-    
-    that.blesend(that.stringToBytes(that.data.strcmd));
+    that.sendStrCmd( that.data.strcmd )
+    console.log( that.data.cleanStrCmd );
+
+  },
+
+  sendStrCmd:function(strcmd) {
+    if( strcmd.length > 17 ){
+      console.log( strcmd.slice( 0 , 17) );
+      that.blesend(that.stringToBytes( strcmd.slice( 0 , 17) ));
+      that.sendStrCmd( strcmd.slice(17) );
+    }else{
+      console.log( strcmd );
+      that.blesend(that.stringToBytes( strcmd ));
+    }
   },
 
   blesend:function(dataBuffer)
