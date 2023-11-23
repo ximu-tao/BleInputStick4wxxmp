@@ -1,0 +1,10 @@
+<!--pages/wol/wol.wxml-->
+<!--index.wxml-->
+<view class="container">
+<input model:value="{{mac}}" placeholder="网卡MAC地址 示例：3497f6599459"></input>
+  <button bindtap="send"> WOL局域网唤醒 </button>
+</view>
+
+<view class="res_container"> 
+  {{udpResData}}
+</view>

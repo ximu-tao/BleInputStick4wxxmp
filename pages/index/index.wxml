@@ -1,15 +1,22 @@
 <!--index.wxml-->
 <view class="content">
-  <text class="status">状态：{{ status }} {{ deviceId }}</text> <button type="" class="button" bindtap="startBluetoothDevicesDiscovery">搜索</button>
-   
-  <text class="msg">消息：{{ msg }} </text>
- 
-  <button type="primary" class="button" bindtap="lanya1">上一页</button>
-  <button type="primary" class="button" bindtap="lanya2">下一页</button>
-  <button type="primary" class="button" bindtap="lanya3">ESC</button>
-  <button type="primary" class="button" bindtap="lanya4">Enter</button>
+  <text class="status">
+  状态：{{ status }}
+   {{ deviceId }}
+   </text> 
 
-  <button type="primary" class="button" bindtap="sendtest">send</button>
+   <text class="msg">消息：{{ msg }} </text>
+
+  <button type="default" class="button" bindtap="startBluetoothDevicesDiscovery">搜索</button>
+   
+
+ 
+  <button type="primary" class="button" bindtap="bindViewPrepage">上一页</button>
+  <button type="primary" class="button" bindtap="bindViewNextpage">下一页</button>
+  <button type="primary" class="button" bindtap="bindViewEsc">ESC</button>
+  <button type="primary" class="button" bindtap="bindViewEnter">Enter</button>
+
+  
   
 
   
@@ -21,12 +28,13 @@
     <view class="venues_item">
       <text class="status">设备名称:{{item.name}}</text>
       <text class="status">设备ID:{{item.deviceId}}</text>
-      <text class="status">连接状态:{{connectedDeviceId == item.deviceId?"已连接":"未连接"}}</text>
+      <!-- <text class="status">连接状态:{{connectedDeviceId == item.deviceId?"已连接":"未连接"}}</text>-->
       <view class="section">
       </view>
+    <!--
       <view class="section">
         <button type="warn" class="button" id="{{item.deviceId}}" bindtap="connectTO">连接</button>
-      </view>
+      </view>-->
     </view>
   </block>
 </view>
