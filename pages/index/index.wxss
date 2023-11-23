@@ -46,6 +46,3 @@ page{
   margin:  auto 10px;
 }
 
-.venues_list{
-  overflow: auto;
-}
