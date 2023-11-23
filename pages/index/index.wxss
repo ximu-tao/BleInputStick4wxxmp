@@ -1,3 +1,8 @@
+page{
+  overflow: hidden;
+  height: 100%;
+}
+
 .content {  
   margin: 0 10px;  
 }  
@@ -39,4 +44,8 @@
 
 .input1 {
   margin:  auto 10px;
+}
+
+.venues_list{
+  overflow: auto;
 }
