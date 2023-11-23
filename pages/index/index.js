@@ -92,7 +92,7 @@ Page({
         success: function (res) {
           /* 获取蓝牙设备列表 */
           that.setData({
-            msg: "蓝牙搜索完毕！",
+            msg: "蓝牙搜索完毕！未找到目标设备。",
           })
           that.getBluetoothDevices()
         },
