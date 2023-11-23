@@ -127,7 +127,7 @@ Page({
          
               for (let i = 0; i < res.devices.length; i++) {
                 console.log(res.devices[i].name);
-                if ('ble2usbhid' === res.devices[i].name) {
+                if ( res.devices[i].name.indexOf ( "BLE2USBHID" ) != -1 ) {
                   /* 根据指定的蓝牙设备名称匹配到deviceId */
                 
                   that.deviceId=res.devices[i].deviceId,
