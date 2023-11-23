@@ -431,6 +431,14 @@ Page({
     that.sendData("01 08 00 00 29 00 00 00 00 00");
     that.sendData("01 08 00 00 00 00 00 00 00 00");
   },
+
+  bindViewMouseRClick: function() {
+    that.blesend(that.stringToBytes( "M:RCLICK" ));
+  },
+  bindViewMouseLClick: function() {
+    that.blesend(that.stringToBytes( "M:LCLICK" ));
+  },
+
   // 断开设备连接
   closeConnect:function() {
     if (that.connectedDeviceId) {

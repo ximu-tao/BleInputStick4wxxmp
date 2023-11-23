@@ -46,3 +46,21 @@ page{
   margin:  auto 10px;
 }
 
+
+.touchpadview{
+	width:100%;
+	position:fixed;
+	bottom:0px;
+}
+
+.mousebutton{
+     display: flex;
+  flex-direction: row;
+   justify-content: center;
+}
+
+.touchpad{
+  background-color: red;
+  height: 60vw;
+
+}
