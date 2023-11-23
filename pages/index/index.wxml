@@ -7,7 +7,7 @@
 
    <text class="msg">消息：{{ msg }} </text>
 
-  <button type="default" class="button" bindtap="startBluetoothDevicesDiscovery">搜索</button>
+  <button type="default" class="button" bindtap="startBluetoothDevicesDiscovery">搜索连接</button>
    
 
  
@@ -16,8 +16,10 @@
   <button type="primary" class="button" bindtap="bindViewEsc">ESC</button>
   <button type="primary" class="button" bindtap="bindViewEnter">Enter</button>
 
-  
-  
+<view>
+<input model:value="{{strcmd}}"></input>
+  <button type="primary" class="button" bindtap="bindViewScmd">发送字符串指令</button>
+</view>
 
   
 </view>
@@ -26,7 +28,7 @@
 <view class="venues_list">
   <block wx:for="{{devices}}" wx:key="{{test}}">
     <view class="venues_item">
-      <text class="status">设备名称:{{item.name}}</text>
+      <text class="status">设备名称:{{item.name}} RSSI:{{item.RSSI}}</text>
       <text class="status">设备ID:{{item.deviceId}}</text>
       <!-- <text class="status">连接状态:{{connectedDeviceId == item.deviceId?"已连接":"未连接"}}</text>-->
       <view class="section">

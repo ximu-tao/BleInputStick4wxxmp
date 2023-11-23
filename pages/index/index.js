@@ -1,7 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp()
-
+const util = require("../../utils/util");
 var that;//把this对象复制到临时变量that
 
 Page({
@@ -14,6 +14,8 @@ Page({
     ServicweId:'',
     writeCharacteristicsId:"",
 
+    strcmd:'K:ABC123',
+
   },
   //事件处理函数
   bindViewTap: function() {
@@ -21,11 +23,14 @@ Page({
       url: '../logs/logs'
     })
   },
+
+  onUnload:function(){
+    that.closeBLEConnection()
+    that.closeBluetoothAdapter()
+  },
   onLoad: function () {
     that = this;
    
-  
-
     if (wx.openBluetoothAdapter) {
       that.setData({
         msg: "...."
@@ -77,7 +82,11 @@ Page({
   },
 
   startBluetoothDevicesDiscovery: function() {
-     
+    wx.openBluetoothAdapter({})
+     that.closeConnect();
+     that.setData({
+     devices:{}
+    })
     setTimeout(() => {
       wx.startBluetoothDevicesDiscovery({
         success: function (res) {
@@ -94,7 +103,7 @@ Page({
           
         }
       })
-    }, 1000)
+    }, 500)
   },
 
 
@@ -135,11 +144,9 @@ Page({
             console.log(res, '停止搜索失败')
           }
         })
-
-
-                  setTimeout(() => {
+ 
                     that.connectTO();
-                  }, 2000);
+               
                 };
               };
             
@@ -150,7 +157,7 @@ Page({
           console.log(res, '获取蓝牙设备列表失败=====')
         }
       })
-    }, 1000)
+    }, 50)
   },
 
   
@@ -221,7 +228,7 @@ Page({
           })
         }
       })
-    }, 1000)
+    }, 500)
   },
 
   getBLEDeviceCharacteristics:function() {
@@ -257,7 +264,7 @@ Page({
         fail: function (res) {
         }
       })
-    }, 1000)
+    }, 100)
   },
 
   notifyBLECharacteristicValueChange:function() { // 启用低功耗蓝牙设备特征值变化时的 notify 功能
@@ -318,109 +325,39 @@ Page({
     }
     return resultStr.join('');
   },
+ 
+ stringToBytes:function(str) {
+  var array = new Uint8Array(str.length);
+  for (var i = 0, l = str.length; i < l; i++) {
+    array[i] = str.charCodeAt(i);
+  }
+  console.log(array);
+  return array.buffer;
+},
+ 
 
-  Str2Bytes:function (str)
+  
+  bindViewScmd:function()
+  {
+    
+    that.blesend(that.stringToBytes(that.data.strcmd));
+  },
 
-{
-
-var pos = 0;
-
-var len = str.length;
-
-if(len %2 != 0)
-
-{
-
-return null;
-
-}
-
-len /= 2;
-
-var hexA = new Array();
-
-for(var i=0; i<len; i++)
-
-{
-
-var s = str.substr(pos, 2);
-
-var v = parseInt(s, 16);
-
-hexA.push(v);
-
-pos += 2;
-
-}
-
-return hexA;
-
-}
-,
-
-//字节数组转十六进制字符串
-
- Bytes2Str: function(arr)
-
-{
-
-var str = "";
-
-for(var i=0; i<arr.length; i++)
-
-{
-
-var tmp = arr[i].toString(16);
-
-if(tmp.length == 1)
-
-{
-
-tmp = "0" + tmp;
-
-}
-
-str += tmp;
-
-}
-
-return str;
-
-}
-
-
-
-  ,
-  sendData:function(str) {
-     
-    str = str.replace(/(^\s+)|(\s+$)/g,"");
-    str = str.replace(/\s/g,"");
-    console.log('发送的数据：' + str)
-
-    /*
-    let dataBuffer = new ArrayBuffer(str.length/2)
-    let dataView = new DataView(dataBuffer)
-    for (var i = 0; i < str.length/2; i++) {
-      dataView.setUint8(i, str.charAt(i).charCodeAt())
-    }
-    let dataHex = that.ab2hex(dataBuffer);
-    this.writeDatas = that.hexCharCodeToStr(dataHex);
-    */
-
-   let dataBuffer  = new Int8Array( that.Str2Bytes(str)).buffer;
-   this.writeDatas =that.Bytes2Str(dataBuffer)
-
-    console.log('发送的数据：' + that.writeDatas)
+  blesend:function(dataBuffer)
+  {
+    
+ 
+    console.log('发送的数据：' ,dataBuffer)
     wx.writeBLECharacteristicValue({
       deviceId: that.connectedDeviceId,
       serviceId: that.ServicweId,
       characteristicId: that.writeCharacteristicsId,
       value: dataBuffer,
       success: function (res) {
-        console.log('发送的数据：' + that.writeDatas)
+       
         that.setData({
           status:'操作成功',
-          msg: 'send:' + that.writeDatas+'成功'
+          msg: '发送成功'
         })
         return 1;
       },
@@ -436,6 +373,25 @@ return str;
         console.log('BLE发送结束')
       }
     })
+  },
+  //str 
+  sendData:function(hexstr) {
+     
+    hexstr = hexstr.replace(/(^\s+)|(\s+$)/g,"");
+    hexstr = hexstr.replace(/\s/g,"");
+
+    if(hexstr.length==0)return;
+    /*
+    let dataBuffer = new ArrayBuffer(str.length/2)
+    let dataView = new DataView(dataBuffer)
+    for (var i = 0; i < str.length/2; i++) {
+      dataView.setUint8(i, str.charAt(i).charCodeAt())
+    }
+    let dataHex = that.ab2hex(dataBuffer);
+    this.writeDatas = that.hexCharCodeToStr(dataHex);
+    */
+   let dataBuffer  = new Int8Array( util.Str2Bytes(hexstr)).buffer;
+    that.blesend(dataBuffer);
   },
 
   //第一字节01代表键盘 第二字节代表数据长度8字节  第三字节开始是HID数据（键盘是8字节）
@@ -472,7 +428,7 @@ return str;
         }
       })
     } else {
-      that.closeBluetoothAdapter()
+      //that.closeBluetoothAdapter()
     }
   },
   // 关闭蓝牙模块
