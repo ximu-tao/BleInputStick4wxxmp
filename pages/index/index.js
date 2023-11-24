@@ -23,6 +23,7 @@ Page({
     cleanStrCmd : false,
     MouseReport : [],
     sliderValue : 0,
+    continuousMode : false
   },
   //事件处理函数
   bindViewTap: function() {
@@ -346,7 +347,12 @@ Page({
   console.log(array);
   return array.buffer;
 },
- 
+  strcmdInput(e){
+    if ( this.data.continuousMode ) {
+      // console.log( that.data.strcmd.substr(-1) );
+      that.sendStrCmd( that.data.strcmd.substr(-1) )
+    }
+  },
 
   
   bindViewScmd:function()
