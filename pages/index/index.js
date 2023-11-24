@@ -8,7 +8,7 @@ var lastLeft = 0;
 var lastTop = 0;
 var currTop = 0;
 var currLeft = 0;
-
+var lastSliderValue = 0;
 Page({
   data: {
     status: "未连接",
@@ -22,6 +22,7 @@ Page({
     strcmd:'K:ABC123',
     cleanStrCmd : false,
     MouseReport : [],
+    sliderValue : 0,
   },
   //事件处理函数
   bindViewTap: function() {
@@ -537,5 +538,21 @@ Page({
   handletouchmove: function (event) {
     currTop = event.touches[0].clientY 
     currLeft = event.touches[0].clientX
+  },
+  sliderchange( e ){
+    console.log(`slider发生change事件结束，携带值为`, e.detail.value)
+    lastSliderValue = 0
+    this.setData({
+      "sliderValue":0
+    })
+  },
+  sliderchanging( e ){
+    if( lastSliderValue != e.detail.value ){
+      // console.log(`slider发生changing事件，`, lastSliderValue , "-" , e.detail.value)
+      this.MouseReport[5] = lastSliderValue - e.detail.value
+      lastSliderValue = e.detail.value
+      this.blesend(  this.MouseReport.buffer  );
+      
+    }
   }
 })

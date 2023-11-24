@@ -18,6 +18,8 @@
 
 
 <view class="touchpadview">
+  <slider bindchange="sliderchange" bindchanging="sliderchanging" 
+  min='-20' max='20'  model:value="{{sliderValue}}"/>
   <view class="mousebutton">
     <button type="primary" bind:tap="bindViewMouseLClick">左键</button>
     <button type="primary" bind:tap="bindViewMouseRClick">右键</button>
