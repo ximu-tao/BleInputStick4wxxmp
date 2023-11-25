@@ -548,6 +548,7 @@ Page({
   sliderchange( e ){
     console.log(`slider发生change事件结束，携带值为`, e.detail.value)
     lastSliderValue = 0
+    this.MouseReport[5] = 0
     this.setData({
       "sliderValue":0
     })
