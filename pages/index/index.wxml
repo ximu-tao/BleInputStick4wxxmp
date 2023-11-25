@@ -26,6 +26,7 @@
     <button type="primary" bind:tap="bindViewMouseRClick">右键</button>
   </view>
   <view class="touchpad"  bind:touchstart="handletouchstart" bind:touchend="handletouchend"  bindtouchmove="handletouchmove"  >
+    <text>\n触摸板区域\n按下并移动可以控制鼠标移动\n单击为左键\n长按为右键</text>
     
   </view>
 </view>

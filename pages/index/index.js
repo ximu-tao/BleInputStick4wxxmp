@@ -4,10 +4,15 @@ const app = getApp()
 const util = require("../../utils/util");
 var that;//把this对象复制到临时变量that
 
-var lastLeft = 0;
-var lastTop = 0;
-var currTop = 0;
-var currLeft = 0;
+let touchpadData = {
+  startTop : 0,
+  startLeft : 0,
+  lastLeft : 0,
+  lastTop : 0,
+  currTop : 0,
+  currLeft : 0,
+  timeStamp : 0,
+}
 var lastSliderValue = 0;
 Page({
   data: {
@@ -494,29 +499,32 @@ Page({
   },
 
   handletouchstart: function (event) {
-    // console.log( event )
+    console.log( event )
     // console.log( this.MouseReport );
     // console.log( that.MouseReport );
 
-    lastTop = event.touches[0].clientY 
-    currTop = lastTop
-    lastLeft = event.touches[0].clientX
-    currLeft = lastLeft
+    touchpadData.timeStamp = event.timeStamp;
+    touchpadData.startTop = event.touches[0].clientY 
+    touchpadData.lastTop = event.touches[0].clientY 
+    touchpadData.currTop = event.touches[0].clientY 
+    touchpadData.startLeft = event.touches[0].clientX
+    touchpadData.lastLeft = event.touches[0].clientX
+    touchpadData.currLeft = event.touches[0].clientX
     // 防止开始时鼠标乱跳
 
     let intervalId = setInterval( ()=>{
       
       // that.MouseReport[2] = 0;
-      this.MouseReport[3] = (currLeft - lastLeft) ;
-      this.MouseReport[4] = (currTop - lastTop)  ;
+      this.MouseReport[3] = (touchpadData.currLeft - touchpadData.lastLeft) ;
+      this.MouseReport[4] = (touchpadData.currTop - touchpadData.lastTop)  ;
       // that.MouseReport[5] = 0;
 
       // console.log( "interval1" , lastLeft ,  lastTop  );
       // console.log( "interval2" , currLeft - lastLeft , currTop - lastTop  );
 
 
-      lastLeft = currLeft  
-      lastTop  = currTop
+      touchpadData.lastLeft = touchpadData.currLeft  
+      touchpadData.lastTop  = touchpadData.currTop
 
       that.blesend(  this.MouseReport.buffer  );
 
@@ -534,16 +542,34 @@ Page({
     console.log( event );
     this.MouseReport[3] = 0  
     this.MouseReport[4] = 0
+ 
+    if (
+      touchpadData.startTop == touchpadData.currTop &&
+      touchpadData.startLeft == touchpadData.currLeft
+    ) {
+      console.log("触摸板点击时间" , event.timeStamp - touchpadData.timeStamp  );
+      if ( (event.timeStamp - touchpadData.timeStamp) < 200  ) {
+          // 单击, 发送左键
+        this.MouseReport[2] = 1; 
+      }else{
+                  // 长按, 发送右键
+        this.MouseReport[2] = 2; 
+      }
+      this.blesend(  this.MouseReport.buffer  );
+
+      this.MouseReport[2] = 0;
+    }
+
 
     this.blesend(  this.MouseReport.buffer  );
 
-    console.log( "touchend1" , lastLeft ,  lastTop  );
-    console.log( "touchend2" , currLeft  , currTop   );
+    console.log( "touchend1" , touchpadData.lastLeft ,  touchpadData.lastTop  );
+    console.log( "touchend2" , touchpadData.currLeft  , touchpadData.currTop   );
 
   },
   handletouchmove: function (event) {
-    currTop = event.touches[0].clientY 
-    currLeft = event.touches[0].clientX
+    touchpadData.currTop = event.touches[0].clientY 
+    touchpadData.currLeft = event.touches[0].clientX
   },
   sliderchange( e ){
     console.log(`slider发生change事件结束，携带值为`, e.detail.value)
