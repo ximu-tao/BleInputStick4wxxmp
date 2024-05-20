@@ -36,6 +36,12 @@ Page({
       url: '../logs/logs'
     })
   },
+  continuousModeChange () {
+    let mode = this.data.continuousMode;
+    this.setData( {
+      'cleanStrCmd': mode
+    } )
+  },
 
   onUnload:function(){
     that.closeBLEConnection()

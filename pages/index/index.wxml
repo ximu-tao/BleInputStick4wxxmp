@@ -11,8 +11,8 @@
       <input class="input1" model:value="{{strcmd}}" bindinput="strcmdInput"></input>
     </view>
   <button type="primary" class="button" bindtap="bindViewScmd">发送字符串指令</button>
-    <switch  type="switch" model:checked="{{cleanStrCmd}}"   >发送指令后清除输入框</switch>
-    <switch  type="switch" model:checked="{{continuousMode}}"   >连续输入模式</switch>
+    <switch  type="switch" model:checked="{{cleanStrCmd}}" disabled="{{continuousMode}}"   >发送指令后清除输入框</switch>
+    <switch  type="switch" model:checked="{{continuousMode}}"   bindchange="continuousModeChange"  >连续输入模式</switch>
   </view>
 
 </view>
