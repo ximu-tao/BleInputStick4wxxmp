@@ -354,8 +354,8 @@ Page({
 },
   strcmdInput(e){
     if ( this.data.continuousMode ) {
-      // console.log( that.data.strcmd.substr(-1) );
-      that.sendStrCmd( that.data.strcmd.substr(-1) )
+      // console.log( e.detail.value.substr(-1) );
+      that.sendStrCmd( e.detail.value.substr(-1) )
     }
   },
 
